@@ -1,0 +1,27 @@
+{
+  "name": "express-movie",
+  "version": "1.0.0",
+  "description": "movie management in express",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maobenmo/express-movie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/maobenmo/express-movie/issues"
+  },
+  "homepage": "https://github.com/maobenmo/express-movie#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
