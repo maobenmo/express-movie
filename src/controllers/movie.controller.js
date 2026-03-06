@@ -1,18 +1,7 @@
-const express = require('express');
-const cors = require('cors');
+const movies = require('../models/movie.model');
 
 
-const movies = require('./src/models/movie.model');
-
-
-let nextMovieId = 3;
-let nextReviewId = 5;
-
-const app = express();
-
-app.use(cors());
-
-app.get('/v1/movies', (req, res) => {
+const getAllMovies = (req, res) => {
     // search
     const { keyword, sort, page = 1, limit = 10 } = req.query;
     const parsedPage = parseInt(page) || 1;
@@ -40,9 +29,9 @@ app.get('/v1/movies', (req, res) => {
     const result = filteredMovies.slice(startIndex, startIndex + parsedLimit);
 
     res.json(result);
-});
+};
 
-app.get('/v1/movies/:id', (req, res) => {
+const getMovieById = (req, res) => {
     const { id } = req.params;
     const movie = movies.find((m) => m.id === parseInt(id));    
 
@@ -51,9 +40,9 @@ app.get('/v1/movies/:id', (req, res) => {
     }
 
     res.json(movie);
-});
+};
 
-app.post('/v1/movies', express.json(), (req, res) => {
+const createMovie = (req, res) => {
     const { title, description, types } = req.body;
     if (!title || !description || !types) {
         return res.status(400).json({ error: 'Title, description, and types are required' });
@@ -70,9 +59,10 @@ app.post('/v1/movies', express.json(), (req, res) => {
 
     movies.push(newMovie);
     res.status(201).json(newMovie);
-});
+};
 
-app.put('/v1/movies/:id', express.json(), (req, res) => {
+
+const updateMovie = (req, res) => {
     const { id } = req.params;
     const { title, description, types } = req.body;
 
@@ -87,9 +77,9 @@ app.put('/v1/movies/:id', express.json(), (req, res) => {
     if (types) movie.types = types;
 
     res.json(movie);
-});
+};
 
-app.delete('/v1/movies/:id', (req, res) => {
+const deleteMovie = (req, res) => {
     const { id } = req.params;
     const index = movies.findIndex((m) => m.id === parseInt(id));
     if (index === -1) {
@@ -97,18 +87,18 @@ app.delete('/v1/movies/:id', (req, res) => {
     }
     movies.splice(index, 1);
     res.status(204).send();
-});
+};
 
-app.get('/v1/movies/:id/reviews', (req, res) => {
+const getMovieReviews = (req, res) => {
     const { id } = req.params;
     const movie = movies.find((m) => m.id === parseInt(id));
     if (!movie) {
         return res.status(404).json({ error: 'Movie not found' });
     }
     res.json(movie.reviews);
-});
+};
 
-app.post('/v1/movies/:id/reviews', express.json(), (req, res) => {
+const createMovieReview = (req, res) => {
     const { id } = req.params;
     const { content, rating } = req.body;
     if (!content || rating === undefined) {
@@ -127,8 +117,17 @@ app.post('/v1/movies/:id/reviews', express.json(), (req, res) => {
     };
     movie.reviews.push(newReview);
     res.status(201).json(newReview);
-});
+};
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+module.exports = {
+    getAllMovies,
+    getMovieById,
+    createMovie,
+    updateMovie,
+    deleteMovie,
+    getMovieReviews,
+    createMovieReview 
+};
+
+
+
